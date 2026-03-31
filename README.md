@@ -3,9 +3,9 @@
 Hotel booking web application built with Angular and Django REST Framework.
 
 ## Team Members
--Baiyrov Yerassyl
--Demchenko Valeriya
--Bolatova Akniyet
+Baiyrov Yerassyl
+Demchenko Valeriya
+Bolatova Akniyet
 
 ## Features
 - View hotels
