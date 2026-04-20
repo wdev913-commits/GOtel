@@ -1,9 +1,0 @@
-
-const HOTELS = [
-  { id:1, name:"Grand Violet Hotel", location:"Алматы, Казахстан", stars:5, score:9.4, reviews:847, price:18500, oldPrice:22000, badge:"Топ выбор", badgeClass:"", emoji:"🏨", tags:["Бассейн","Спа","Завтрак"], amenities:["🏊","💆","🍳","🏋️","🚗"], description:"Роскошный отель в самом сердце города с панорамным видом на горы.", hasDiscount:true },
-  { id:2, name:"Lilac Boutique", location:"Нур-Султан, Казахстан", stars:4, score:8.9, reviews:412, price:9200, oldPrice:null, badge:"", badgeClass:"", emoji:"🌸", tags:["Уют","Бутик","Дизайн"], amenities:["🍳","💆","🅿️"], description:"Стильный бутик-отель с авторским интерьером и персональным сервисом." },
-  { id:3, name:"The Orchid Palace", location:"Дубай, ОАЭ", stars:5, score:9.7, reviews:1254, price:64000, oldPrice:75000, badge:"Скидка 15%", badgeClass:"deal", emoji:"🌺", tags:["Luxury","Пляж","Спа"], amenities:["🏊","💆","🍳","🏋️","🐾"], description:"Легендарный дворец-отель с приватным пляжем и видом на залив.", hasDiscount:true },
-  { id:4, name:"Mauve Garden Hotel", location:"Стамбул, Турция", stars:4, score:8.5, reviews:633, price:24500, oldPrice:null, badge:"", badgeClass:"", emoji:"🌿", tags:["Сад","Терраса","Вид"], amenities:["🍳","🏋️","🅿️"], description:"Отель в историческом квартале с собственным садом и видом на Босфор." },
-  { id:5, name:"Lavender Inn", location:"Барселона, Испания", stars:3, score:8.2, reviews:289, price:7800, oldPrice:null, badge:"", badgeClass:"", emoji:"💜", tags:["Центр","Эконом","Уют"], amenities:["🍳","🅿️"], description:"Уютный отель в центре Барселоны, в 5 минутах от Саграда Фамилия." },
-  { id:6, name:"Violet Sky Resort", location:"Бали, Индонезия", stars:5, score:9.2, reviews:978, price:31000, oldPrice:38000, badge:"Популярный", badgeClass:"", emoji:"🌅", tags:["Курорт","Пляж","Закат"], amenities:["🏊","💆","🍳","🏋️","🐾"], description:"Ультра-роскошный курорт на берегу Индийского океана с бесконечным бассейном.", hasDiscount:true }
-];
