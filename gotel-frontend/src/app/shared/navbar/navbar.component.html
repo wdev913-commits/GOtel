@@ -1,0 +1,16 @@
+<nav class="nav">
+  <div class="nav-logo" routerLink="/hotels">
+    <span class="logo-dot"></span>GOtel
+  </div>
+
+  <div class="nav-links">
+    <a class="nav-link" routerLink="/hotels" routerLinkActive="active">Отели</a>
+    <a class="nav-link" routerLink="/bookings" routerLinkActive="active">Мои брони</a>
+  </div>
+
+  @if (isLoggedIn) {
+    <button class="nav-cta" (click)="logout()">Выйти</button>
+  } @else {
+    <button class="nav-cta" routerLink="/login">Войти</button>
+  }
+</nav>

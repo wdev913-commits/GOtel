@@ -1,0 +1,96 @@
+<div class="page active">
+  <div class="page-header">
+    <h2>Мои бронирования</h2>
+    <p>Управляйте своими поездками</p>
+  </div>
+
+  <!-- Success -->
+  @if (deleteSuccess) {
+    <div style="background:#f0fff4;color:#1b5e20;border:1.5px solid #a5d6a7;border-radius:12px;padding:14px 20px;margin:0 auto 20px;max-width:800px">
+      ✓ Бронь успешно отменена
+    </div>
+  }
+
+  <!-- Error -->
+  @if (deleteError) {
+    <div style="background:#fff0f0;color:#d32f2f;border:1.5px solid #ffcdd2;border-radius:12px;padding:14px 20px;margin:0 auto 20px;max-width:800px">
+      ⚠ {{ deleteError }}
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (isLoading) {
+    <div style="text-align:center;padding:60px">
+      <div style="font-size:2rem">⏳</div>
+      <p style="color:var(--gray-500);margin-top:12px">Загружаем бронирования...</p>
+    </div>
+  }
+
+  <!-- Load error -->
+  @if (loadError) {
+    <div style="background:#fff0f0;color:#d32f2f;border:1.5px solid #ffcdd2;border-radius:16px;padding:20px;max-width:800px;margin:0 auto">
+      ⚠ {{ loadError }}
+      <button class="filter-reset" style="margin-top:10px" (click)="loadBookings()">Попробовать снова</button>
+    </div>
+  }
+
+  <!-- Empty state -->
+  @if (!isLoading && !loadError && bookings.length === 0) {
+    <div style="text-align:center;padding:80px 20px">
+      <div style="font-size:3rem;margin-bottom:16px">🏨</div>
+      <h3 style="font-family:'Playfair Display',serif;color:var(--gray-700)">Нет активных броней</h3>
+      <p style="color:var(--gray-500);margin-top:8px">Забронируйте отель на странице отелей</p>
+      <a routerLink="/hotels" class="modal-confirm" style="display:inline-block;margin-top:20px;text-decoration:none">
+        Найти отель
+      </a>
+    </div>
+  }
+
+  <!-- Bookings list — @for -->
+  <div style="max-width:800px;margin:0 auto;padding:0 24px 60px;display:flex;flex-direction:column;gap:16px">
+    @for (booking of bookings; track booking.id) {
+      <div class="hotel-card" style="flex-direction:column">
+        <div class="hotel-info" style="width:100%">
+
+          <div class="hotel-meta">
+            <div>
+              <div class="hotel-name">
+                {{ booking.hotel_name ?? 'Отель' }}
+              </div>
+              <div class="hotel-location">
+                🛏 Номер: {{ booking.room_info?.room_type ?? booking.room }}
+              </div>
+            </div>
+            <div class="hotel-price-section">
+              @if (booking.total_price) {
+                <div class="price-main">₸{{ booking.total_price | number }}</div>
+                <div class="price-night">итого</div>
+              }
+            </div>
+          </div>
+
+          <div class="hotel-tags" style="margin-top:10px">
+            <span class="tag tag-lilac">
+              📅 Заезд: {{ booking.check_in | date:'dd.MM.yyyy' }}
+            </span>
+            <span class="tag tag-lilac">
+              📅 Выезд: {{ booking.check_out | date:'dd.MM.yyyy' }}
+            </span>
+          </div>
+
+          <div class="hotel-footer" style="margin-top:16px">
+            <div></div>
+            <!-- CLICK EVENT: Cancel booking -->
+            <button class="book-btn"
+                    style="background:#d32f2f"
+                    (click)="cancelBooking(booking.id!)">
+              ✕ Отменить бронь
+            </button>
+          </div>
+
+        </div>
+      </div>
+    }
+  </div>
+
+</div>

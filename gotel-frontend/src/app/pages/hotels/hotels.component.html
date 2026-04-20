@@ -1,0 +1,288 @@
+<div class="page active" id="page-home">
+
+  <!-- ═══ HERO ═══ -->
+  <div class="hero">
+    <span class="hero-eyebrow">✦ Найдите свой идеальный отдых</span>
+    <h1>Найдите <em>идеальный</em><br>отель для вас</h1>
+    <p class="hero-sub">Более 2 500 отелей по всему миру. Лучшие цены, гарантированный комфорт.</p>
+
+    <div class="search-card">
+      <div class="search-grid">
+
+        <!-- FORM CONTROL 1: Destination search -->
+        <div class="search-field">
+          <label>Куда едем?</label>
+          <input type="text" placeholder="Город, курорт или отель..."
+                 [(ngModel)]="searchDestination" name="destination" />
+        </div>
+
+        <!-- FORM CONTROL 2: Min price -->
+        <div class="search-field">
+          <label>Цена от (₸)</label>
+          <input type="number" placeholder="от" [(ngModel)]="priceMin" name="priceMin" />
+        </div>
+
+        <!-- FORM CONTROL 3: Max price -->
+        <div class="search-field">
+          <label>Цена до (₸)</label>
+          <input type="number" placeholder="до" [(ngModel)]="priceMax" name="priceMax" />
+        </div>
+
+        <!-- CLICK EVENT 2: Apply filters -->
+        <div class="search-field">
+          <button class="search-btn" (click)="applyFilters()">🔍 Найти</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ STATS ═══ -->
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-num">2,500+</div><div class="stat-label">Отелей по миру</div></div>
+    <div class="stat-item"><div class="stat-num">98%</div><div class="stat-label">Довольных гостей</div></div>
+    <div class="stat-item"><div class="stat-num">150+</div><div class="stat-label">Городов</div></div>
+    <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Поддержка</div></div>
+  </div>
+
+  <div class="content-wrapper">
+
+    <!-- ═══ FILTER PANEL ═══ -->
+    <aside class="filter-panel">
+      <h3><span class="filter-icon">⚙</span> Фильтры</h3>
+
+      <div class="filter-section">
+        <div class="filter-section-title">Цена за ночь (₸)</div>
+        <div class="price-range">
+          <input type="number" class="price-input" placeholder="от"
+                 [(ngModel)]="priceMin" name="priceMinSide" />
+          <input type="number" class="price-input" placeholder="до"
+                 [(ngModel)]="priceMax" name="priceMaxSide" />
+        </div>
+      </div>
+
+      <!-- FORM CONTROL 4: Stars filter -->
+      <div class="filter-section">
+        <div class="filter-section-title">Звёздность</div>
+        <select style="width:100%;padding:8px;border-radius:8px;border:1.5px solid var(--lilac-200)"
+                [(ngModel)]="selectedStars" name="selectedStars">
+          <option [value]="0">Все</option>
+          <option [value]="3">★★★ 3 звезды</option>
+          <option [value]="4">★★★★ 4 звезды</option>
+          <option [value]="5">★★★★★ 5 звёзд</option>
+        </select>
+      </div>
+
+      <button class="filter-apply-btn" (click)="applyFilters()">Применить фильтры</button>
+      <button class="filter-reset" (click)="resetFilters()">Сбросить всё</button>
+    </aside>
+
+    <!-- ═══ HOTEL LISTING ═══ -->
+    <main>
+
+      <!-- Loading state -->
+      @if (isLoading) {
+        <div style="text-align:center;padding:60px">
+          <div style="font-size:2rem">⏳</div>
+          <p style="color:var(--gray-500);margin-top:12px">Загружаем отели...</p>
+        </div>
+      }
+
+      <!-- Error state -->
+      @if (loadError) {
+        <div style="background:#fff0f0;color:#d32f2f;border:1.5px solid #ffcdd2;border-radius:16px;padding:20px;margin-bottom:20px">
+          ⚠ {{ loadError }}
+          <!-- CLICK EVENT 1: Retry loading -->
+          <button class="filter-reset" style="margin-top:10px" (click)="loadHotels()">Попробовать снова</button>
+        </div>
+      }
+
+      <!-- Hotel count -->
+      @if (!isLoading && !loadError) {
+        <div class="hotel-list-header">
+          <div class="hotel-count">Найдено: <strong>{{ filteredHotels.length }}</strong> отелей</div>
+        </div>
+      }
+
+      <!-- No results -->
+      @if (!isLoading && !loadError && filteredHotels.length === 0) {
+        <div style="text-align:center;padding:60px;background:white;border-radius:20px;border:1.5px dashed var(--lilac-200)">
+          <div style="font-size:2.5rem;margin-bottom:12px">🔍</div>
+          <h3 style="font-family:'Playfair Display',serif;color:var(--gray-700)">Нет совпадений</h3>
+          <p style="color:var(--gray-500);margin-top:6px">Попробуйте изменить фильтры</p>
+        </div>
+      }
+
+      <!-- ═══ HOTEL CARDS — @for ═══ -->
+      <div class="hotel-cards" id="hotel-cards-container">
+        @for (hotel of filteredHotels; track hotel.id) {
+          <div class="hotel-card">
+            <div class="hotel-img-wrap">
+              <div class="hotel-img-placeholder">🏨</div>
+              @if (hotel.badge) {
+                <span class="hotel-badge">{{ hotel.badge }}</span>
+              }
+            </div>
+
+            <div class="hotel-info">
+              <div>
+                <div class="hotel-meta">
+                  <div>
+                    <div class="hotel-name">{{ hotel.name }}</div>
+                    <div class="hotel-location">📍 {{ hotel.location }}</div>
+                  </div>
+                  <div class="hotel-stars">
+                    @for (star of renderStars(hotel.stars); track $index) {
+                      <span class="star">{{ star }}</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="hotel-footer">
+                  <div style="display:flex;align-items:center">
+                    <div class="hotel-score">{{ hotel.score }}</div>
+                    <div class="hotel-score-info">
+                      <div class="score-label">
+                        @if (hotel.score >= 9.5) { Исключительно }
+                        @else if (hotel.score >= 9) { Превосходно }
+                        @else if (hotel.score >= 8.5) { Очень хорошо }
+                        @else { Хорошо }
+                      </div>
+                      <div class="score-reviews">{{ hotel.reviews }} отзывов</div>
+                    </div>
+                  </div>
+
+                  <div style="display:flex;align-items:center;gap:12px">
+                    <div class="hotel-price-section">
+                      @if (hotel.old_price) {
+                        <div class="price-old">₸{{ hotel.old_price | number }}</div>
+                      }
+                      <div class="price-main">₸{{ hotel.price | number }}</div>
+                      <div class="price-night">за ночь</div>
+                    </div>
+
+                    <!-- CLICK EVENT 3: Open booking modal -->
+                    <button class="book-btn" (click)="openBooking(hotel)">
+                      Забронировать
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+    </main>
+  </div>
+</div>
+
+
+<!-- ═══ BOOKING MODAL ═══ -->
+@if (showModal && selectedHotel) {
+  <div class="modal-overlay" style="display:flex">
+    <div class="modal">
+
+      <div class="modal-header">
+        <h3>Бронирование</h3>
+        <button class="modal-close" (click)="closeModal()">✕</button>
+      </div>
+
+      <!-- Hotel preview -->
+      <div class="modal-hotel-preview">
+        <div>
+          <div class="modal-hotel-name">{{ selectedHotel.name }}</div>
+          <div class="modal-hotel-loc">📍 {{ selectedHotel.location }}</div>
+        </div>
+        <div>
+          <div class="modal-hotel-price">₸{{ selectedHotel.price | number }}</div>
+          <div class="modal-hotel-price-night">за ночь</div>
+        </div>
+      </div>
+
+      <!-- Success message -->
+      @if (bookingSuccess) {
+        <div style="background:#f0fff4;color:#1b5e20;border:1.5px solid #a5d6a7;border-radius:12px;padding:16px;text-align:center;font-size:1rem">
+          ✓ Бронирование подтверждено!
+        </div>
+      }
+
+      <!-- Error message -->
+      @if (bookingError) {
+        <div style="background:#fff0f0;color:#d32f2f;border:1.5px solid #ffcdd2;border-radius:12px;padding:12px 16px;margin-bottom:12px;font-size:0.9rem">
+          ⚠ {{ bookingError }}
+        </div>
+      }
+
+      @if (!bookingSuccess) {
+        <!-- FORM CONTROL 5: Check-in date -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Дата заезда</label>
+            <input type="date" [(ngModel)]="checkIn" name="checkIn" />
+          </div>
+
+          <!-- FORM CONTROL 6: Check-out date -->
+          <div class="form-group">
+            <label>Дата выезда</label>
+            <input type="date" [(ngModel)]="checkOut" name="checkOut" />
+          </div>
+        </div>
+
+        <!-- FORM CONTROL 7: Guests -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Гости</label>
+            <select [(ngModel)]="guests" name="guests">
+              <option [value]="1">1 гость</option>
+              <option [value]="2">2 гостя</option>
+              <option [value]="3">3 гостя</option>
+              <option [value]="4">4 гостя</option>
+            </select>
+          </div>
+
+          <!-- FORM CONTROL 8: Room selection -->
+          <div class="form-group">
+            <label>Тип номера</label>
+            <select [(ngModel)]="selectedRoomId" name="room">
+              <option [value]="null">Выберите номер</option>
+              @for (room of rooms; track room.id) {
+                <option [value]="room.id">
+                  {{ room.room_type }} — ₸{{ room.price | number }}
+                </option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        @if (calcNights() > 0) {
+          <div class="booking-summary">
+            <div class="summary-row">
+              <span>Стоимость за ночь</span>
+              <span>₸{{ selectedHotel.price | number }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Количество ночей</span>
+              <span>{{ calcNights() }}</span>
+            </div>
+            <div class="summary-row total">
+              <span>Итого</span>
+              <span>₸{{ calcTotal() | number }}</span>
+            </div>
+          </div>
+        }
+
+        <div class="modal-footer">
+          <button class="modal-cancel" (click)="closeModal()">Отмена</button>
+          <!-- CLICK EVENT 4: Confirm booking -->
+          <button class="modal-confirm" (click)="confirmBooking()" [disabled]="bookingLoading">
+            @if (bookingLoading) { Подождите... }
+            @else { ✓ Подтвердить бронь }
+          </button>
+        </div>
+      }
+
+    </div>
+  </div>
+}
