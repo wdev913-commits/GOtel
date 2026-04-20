@@ -5,14 +5,14 @@ import { Booking } from '../../models/hotel.model';
 @Injectable({ providedIn: 'root' })
 export class BookingService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = '/api';
 
   getMyBookings() {
     return this.http.get<Booking[]>(`${this.apiUrl}/bookings/`);
   }
 
   createBooking(booking: Booking) {
-    return this.http.post<Booking>(`${this.apiUrl}/bookings/`, booking);
+    return this.http.post<Booking>(`${this.apiUrl}/bookings/create/`, booking);
   }
 
   deleteBooking(id: number) {

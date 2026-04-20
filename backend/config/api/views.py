@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import *
+from .models import Hotel, Room, Booking, Review
 from .serializers import *
 from rest_framework.views import APIView
 

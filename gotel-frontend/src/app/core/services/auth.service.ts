@@ -8,11 +8,12 @@ import { LoginResponse } from '../../models/hotel.model';
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = '/api';
 
   login(email: string, password: string) {
     return this.http.post<LoginResponse>(
-      `${this.apiUrl}/token/`, { email, password }
+  `${this.apiUrl}/login/`, { username: email, password }
+
     ).pipe(
       tap(tokens => {
         localStorage.setItem('access_token', tokens.access);

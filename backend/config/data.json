@@ -1,0 +1,102 @@
+[
+  {
+    "model": "api.hotel",
+    "pk": 1,
+    "fields": {
+      "name": "Grand Violet Hotel",
+      "location": "Almaty",
+      "stars": 5,
+      "description": "Luxury hotel in the city center",
+      "image_url": "https://example.com/hotel1.jpg"
+    }
+  },
+  {
+    "model": "api.hotel",
+    "pk": 2,
+    "fields": {
+      "name": "Astana Comfort Inn",
+      "location": "Astana",
+      "stars": 4,
+      "description": "Comfortable business hotel",
+      "image_url": "https://example.com/hotel2.jpg"
+    }
+  },
+
+  {
+    "model": "api.room",
+    "pk": 1,
+    "fields": {
+      "hotel": 1,
+      "room_number": "101",
+      "room_type": "Deluxe",
+      "price": 25000,
+      "is_available": true
+    }
+  },
+  {
+    "model": "api.room",
+    "pk": 2,
+    "fields": {
+      "hotel": 1,
+      "room_number": "102",
+      "room_type": "Standard",
+      "price": 18000,
+      "is_available": true
+    }
+  },
+  {
+    "model": "api.room",
+    "pk": 3,
+    "fields": {
+      "hotel": 2,
+      "room_number": "201",
+      "room_type": "Suite",
+      "price": 22000,
+      "is_available": false
+    }
+  },
+
+  {
+    "model": "api.booking",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "room": 1,
+      "check_in": "2026-04-20",
+      "check_out": "2026-04-25",
+      "guests": 2,
+      "total_price": 125000
+    }
+  },
+  {
+    "model": "api.booking",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "room": 3,
+      "check_in": "2026-04-21",
+      "check_out": "2026-04-23",
+      "guests": 1,
+      "total_price": 44000
+    }
+  },
+
+  {
+    "model": "api.review",
+    "pk": 1,
+    "fields": {
+      "hotel": 1,
+      "user": 1,
+      "rating": 5
+    }
+  },
+  {
+    "model": "api.review",
+    "pk": 2,
+    "fields": {
+      "hotel": 2,
+      "user": 2,
+      "rating": 4
+    }
+  }
+]
