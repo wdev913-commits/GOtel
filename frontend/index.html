@@ -1,0 +1,322 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GOtell — Отели & Путешествия</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="nav">
+  <div class="nav-logo" onclick="showPage('home')">
+    <span class="logo-dot"></span>GOtell
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" data-page="home" onclick="showPage('home', this)">Отели</button>
+    <button class="nav-link" data-page="calendar" onclick="showPage('calendar', this)"> Календарь</button>
+    <button class="nav-link fav-btn" data-page="favorites" onclick="showPage('favorites', this)">
+      ♡ Избранное
+      <span class="fav-badge" id="fav-count">0</span>
+    </button>
+  </div>
+  <button class="nav-cta">Войти</button>
+</nav>
+
+<!-- SUCCESS BANNER -->
+<div class="success-banner" id="success-banner">
+  ✓ <span id="success-msg">Бронирование подтверждено!</span>
+</div>
+
+<!-- ═══ HOME PAGE ═══ -->
+<div class="page active" id="page-home">
+
+  <div class="hero">
+    <span class="hero-eyebrow">✦ Найдите свой идеальный отдых</span>
+    <h1>Найдите <em>идеальный</em><br>отель для вас</h1>
+    <p class="hero-sub">Более 2 500 отелей по всему миру. Лучшие цены, гарантированный комфорт.</p>
+
+    <div class="search-card">
+      <div class="search-grid">
+        <div class="search-field">
+          <label>Куда едем?</label>
+          <input type="text" placeholder="Город, курорт или отель..." id="search-destination">
+        </div>
+        <div class="search-field">
+          <label>Заезд</label>
+          <input type="date" id="search-checkin">
+        </div>
+        <div class="search-field">
+          <label>Выезд</label>
+          <input type="date" id="search-checkout">
+        </div>
+        <div class="search-field">
+          <button class="search-btn" onclick="applyFilters()">🔍 Найти</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-num">2,500+</div><div class="stat-label">Отелей по миру</div></div>
+    <div class="stat-item"><div class="stat-num">98%</div><div class="stat-label">Довольных гостей</div></div>
+    <div class="stat-item"><div class="stat-num">150+</div><div class="stat-label">Городов</div></div>
+    <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Поддержка</div></div>
+  </div>
+
+  <div class="content-wrapper">
+
+    <!-- FILTER PANEL -->
+    <aside class="filter-panel">
+      <h3><span class="filter-icon">⚙</span> Фильтры</h3>
+
+      <div class="filter-section">
+        <div class="filter-section-title">Цена за ночь (₸)</div>
+        <div class="price-range">
+            <input type="number" class="price-input" placeholder="от" id="price-min" value="5000" min="5000" max="150000">
+            <input type="number" class="price-input" placeholder="до" id="price-max" value="80000" min="5000" max="150000">
+        </div>
+        <input type="range" class="range-slider" min="5000" max="150000" value="80000" id="price-slider" oninput="updateSlider(this)">
+        <div class="price-labels">
+            <span>5 000 ₸</span>
+            <span>150 000 ₸</span>
+        </div>
+        <input type="range" class="range-slider" min="5000" max="150000" value="80000" id="price-slider" oninput="updateSlider(this)">
+        <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--gray-400);margin-top:4px;">
+          <span>5 000 ₸</span><span>150 000 ₸</span>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-title">Звёздность</div>
+        <div class="star-filter">
+          <span class="star-chip active" data-stars="1">★ 1</span>
+          <span class="star-chip active" data-stars="2">★★ 2</span>
+          <span class="star-chip active" data-stars="3">★★★ 3</span>
+          <span class="star-chip active" data-stars="4">★★★★ 4</span>
+          <span class="star-chip active" data-stars="5">★★★★★ 5</span>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-title">Рейтинг гостей</div>
+        <div class="rating-filter">
+          <label class="rating-option">
+            <input type="checkbox" class="rating-checkbox" data-min-rating="9" checked> <span style="font-size:0.82rem;color:var(--gray-700);min-width:80px">Превосходно 9+</span>
+            <div class="rating-bar-wrap"><div class="rating-bar" style="width:85%"></div></div>
+            <span class="rating-count">42</span>
+          </label>
+          <label class="rating-option">
+            <input type="checkbox" class="rating-checkbox" data-min-rating="8" checked> <span style="font-size:0.82rem;color:var(--gray-700);min-width:80px">Очень хорошо 8+</span>
+            <div class="rating-bar-wrap"><div class="rating-bar" style="width:65%"></div></div>
+            <span class="rating-count">28</span>
+          </label>
+          <label class="rating-option">
+            <input type="checkbox" class="rating-checkbox" data-min-rating="7" checked> <span style="font-size:0.82rem;color:var(--gray-700);min-width:80px">Хорошо 7+</span>
+            <div class="rating-bar-wrap"><div class="rating-bar" style="width:45%"></div></div>
+            <span class="rating-count">15</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-title">Удобства</div>
+        <div class="amenity-list">
+          <label class="amenity-item"><input type="checkbox" class="amenity-checkbox" data-amenity="pool" checked> 🏊 Бассейн</label>
+          <label class="amenity-item"><input type="checkbox" class="amenity-checkbox" data-amenity="spa" checked> 💆 Спа</label>
+          <label class="amenity-item"><input type="checkbox" class="amenity-checkbox" data-amenity="parking"> 🅿️ Парковка</label>
+          <label class="amenity-item"><input type="checkbox" class="amenity-checkbox" data-amenity="breakfast" checked> 🍳 Завтрак включён</label>
+          <label class="amenity-item"><input type="checkbox" class="amenity-checkbox" data-amenity="gym"> 🏋️ Фитнес-зал</label>
+          <label class="amenity-item"><input type="checkbox" class="amenity-checkbox" data-amenity="pets"> 🐾 Можно с питомцем</label>
+        </div>
+      </div>
+
+      <button class="filter-apply-btn" onclick="applyFilters()">Применить фильтры</button>
+      <button class="filter-reset" onclick="resetFilters()">Сбросить всё</button>
+    </aside>
+
+    <!-- HOTEL LISTING -->
+    <main>
+      <div class="hotel-list-header">
+        <div class="hotel-count">Найдено: <strong id="hotel-count-num">6</strong> отелей</div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <select class="sort-select" onchange="sortHotels(this.value)">
+            <option value="recommended">Рекомендуемые</option>
+            <option value="price-asc">Цена ↑</option>
+            <option value="price-desc">Цена ↓</option>
+            <option value="rating">По рейтингу</option>
+            <option value="stars">По звёздам</option>
+          </select>
+          <div class="view-toggle">
+            <button class="view-btn active" data-view="list" onclick="setView('list',this)">☰</button>
+            <button class="view-btn" data-view="grid" onclick="setView('grid',this)">⊞</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hotel-cards" id="hotel-cards-container">
+        <!-- Cards rendered by JS -->
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<!-- ═══ CALENDAR PAGE ═══ -->
+<div class="page" id="page-calendar">
+  <div class="page-header">
+    <h2>Календарь дат</h2>
+    <p>Выберите даты заезда и выезда для вашего путешествия</p>
+  </div>
+  <div class="calendar-container">
+    <div class="calendar-card">
+      <div class="calendar-nav">
+        <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+        <div class="cal-month-title" id="cal-title">Апрель — Май 2026</div>
+        <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+      </div>
+      <div class="cal-grids">
+        <div class="cal-grid">
+          <div class="cal-grid-title" id="cal-month1-title">Апрель 2026</div>
+          <div class="cal-weekdays">
+            <div class="cal-weekday">Пн</div><div class="cal-weekday">Вт</div>
+            <div class="cal-weekday">Ср</div><div class="cal-weekday">Чт</div>
+            <div class="cal-weekday">Пт</div><div class="cal-weekday">Сб</div>
+            <div class="cal-weekday">Вс</div>
+          </div>
+          <div class="cal-days" id="cal-days-1"></div>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-grid-title" id="cal-month2-title">Май 2026</div>
+          <div class="cal-weekdays">
+            <div class="cal-weekday">Пн</div><div class="cal-weekday">Вт</div>
+            <div class="cal-weekday">Ср</div><div class="cal-weekday">Чт</div>
+            <div class="cal-weekday">Пт</div><div class="cal-weekday">Сб</div>
+            <div class="cal-weekday">Вс</div>
+          </div>
+          <div class="cal-days" id="cal-days-2"></div>
+        </div>
+      </div>
+      <div class="cal-summary" id="cal-summary">
+        <div class="cal-summary-item">
+          <div class="cal-summary-label">Заезд</div>
+          <div class="cal-summary-val" id="cal-checkin">—</div>
+        </div>
+        <div class="cal-summary-item">
+          <div class="cal-summary-label">Выезд</div>
+          <div class="cal-summary-val" id="cal-checkout">—</div>
+        </div>
+        <div class="cal-summary-item">
+          <div class="cal-summary-label">Ночей</div>
+          <div class="cal-summary-val" id="cal-nights">—</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:20px;">
+        <button class="search-btn" onclick="showPage('home')">Найти отели →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FAVORITES PAGE ═══ -->
+<div class="page" id="page-favorites">
+  <div class="page-header">
+    <h2>♡ Избранные отели</h2>
+    <p>Сохранённые варианты для вашего путешествия</p>
+  </div>
+  <div class="favorites-container" id="fav-container">
+    <!-- Rendered by JS -->
+  </div>
+</div>
+
+<!-- ═══ BOOKING MODAL ═══ -->
+<div class="modal-overlay" id="booking-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Бронирование</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-hotel-preview">
+      <div>
+        <div class="modal-hotel-name" id="modal-hotel-name">Grand Violet Hotel</div>
+        <div class="modal-hotel-loc"> <span id="modal-hotel-loc">Алматы, Казахстан</span></div>
+      </div>
+      <div>
+        <div class="modal-hotel-price" id="modal-hotel-price">₸18,500</div>
+        <div class="modal-hotel-price-night">за ночь</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Имя</label>
+        <input type="text" placeholder="Ваше имя">
+      </div>
+      <div class="form-group">
+        <label>Фамилия</label>
+        <input type="text" placeholder="Ваша фамилия">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" placeholder="email@example.com">
+    </div>
+    <div class="form-group">
+      <label>Телефон</label>
+      <input type="tel" placeholder="+7 (___) ___-__-__">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Дата заезда</label>
+        <input type="date" id="modal-checkin">
+      </div>
+      <div class="form-group">
+        <label>Дата выезда</label>
+        <input type="date" id="modal-checkout">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Гости</label>
+        <select>
+          <option>1 гость</option>
+          <option selected>2 гостя</option>
+          <option>3 гостя</option>
+          <option>4 гостя</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Тип номера</label>
+        <select>
+          <option>Стандарт</option>
+          <option selected>Делюкс</option>
+          <option>Люкс</option>
+          <option>Апартаменты</option>
+        </select>
+      </div>
+    </div>
+    <div class="booking-summary">
+      <div class="summary-row"><span>Стоимость за ночь</span><span id="sum-night">₸18,500</span></div>
+      <div class="summary-row"><span>Количество ночей</span><span id="sum-nights">3</span></div>
+      <div class="summary-row"><span>Сборы и налоги</span><span id="sum-tax">₸5,550</span></div>
+      <div class="summary-row total"><span>Итого</span><span id="sum-total">₸61,050</span></div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-cancel" onclick="closeModal()">Отмена</button>
+      <button class="modal-confirm" onclick="confirmBooking()">✓ Подтвердить бронь</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-logo">GOtell</div>
+  <p>© 2026 GOtell. Все права защищены.</p>
+</div>
+
+<script src="data.js"></script>
+<script src="calendar.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
