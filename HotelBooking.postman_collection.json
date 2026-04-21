@@ -1,0 +1,272 @@
+{
+  "info": {
+    "name": "Hotel Booking API",
+    "description": "Полная коллекция для Hotel Booking REST API",
+    "_postman_id": "hotel-booking-collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8000/api" },
+    { "key": "access_token", "value": "" },
+    { "key": "refresh_token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/register/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"new@hotel.com\",\n  \"password\": \"pass123\",\n  \"password2\": \"pass123\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"access\": \"eyJ...\",\n  \"refresh\": \"eyJ...\",\n  \"user\": { \"id\": 3, \"username\": \"newuser\", \"email\": \"new@hotel.com\" }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "pm.collectionVariables.set('access_token', json.access);",
+                  "pm.collectionVariables.set('refresh_token', json.refresh);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login/",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"test123\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"access\": \"eyJ...\",\n  \"refresh\": \"eyJ...\",\n  \"user\": { \"id\": 2, \"username\": \"testuser\", \"email\": \"test@hotel.com\" }\n}"
+            },
+            {
+              "name": "400 Bad credentials",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"non_field_errors\": [\"Неверный логин или пароль.\"]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/logout/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Выход выполнен успешно.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Hotels",
+      "item": [
+        {
+          "name": "List Hotels",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/hotels/",
+              "host": ["{{baseUrl}}"],
+              "path": ["hotels", ""],
+              "query": [
+                { "key": "city", "value": "Москва", "disabled": true },
+                { "key": "stars", "value": "5", "disabled": true },
+                { "key": "min_price", "value": "1000", "disabled": true },
+                { "key": "max_price", "value": "50000", "disabled": true },
+                { "key": "available", "value": "true", "disabled": true }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Grand Palace Hotel\",\n    \"description\": \"...\",\n    \"city\": \"Москва\",\n    \"address\": \"ул. Тверская, 1\",\n    \"stars\": 5,\n    \"image\": null,\n    \"created_at\": \"2025-01-01T00:00:00Z\",\n    \"avg_rating\": 4.5,\n    \"rooms_count\": 4\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Hotel",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/hotels/1/"
+          }
+        },
+        {
+          "name": "Create Hotel (Admin)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/hotels/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Hotel\",\n  \"description\": \"Описание\",\n  \"city\": \"Алматы\",\n  \"address\": \"ул. Примерная, 1\",\n  \"stars\": 4\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Hotel (Admin)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/hotels/1/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Обновлённое описание\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Hotel (Admin)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/hotels/1/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rooms",
+      "item": [
+        {
+          "name": "List Rooms",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/hotels/1/rooms/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"hotel\": 1,\n    \"hotel_name\": \"Grand Palace Hotel\",\n    \"title\": \"Стандарт\",\n    \"price\": \"25000.00\",\n    \"capacity\": 2,\n    \"is_available\": true,\n    \"image\": null\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Create Room (Admin)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/hotels/1/rooms/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Президентский люкс\",\n  \"price\": \"150000.00\",\n  \"capacity\": 4,\n  \"is_available\": true\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "List My Bookings",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/bookings/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"user\": 2,\n    \"room\": 1,\n    \"room_title\": \"Стандарт\",\n    \"hotel_name\": \"Grand Palace Hotel\",\n    \"user_name\": \"testuser\",\n    \"check_in\": \"2025-06-01\",\n    \"check_out\": \"2025-06-05\",\n    \"created_at\": \"2025-05-01T10:00:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/bookings/",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"room\": 1,\n  \"check_in\": \"2025-07-10\",\n  \"check_out\": \"2025-07-15\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "400 Validation Error",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"non_field_errors\": [\"Номер уже забронирован на выбранные даты.\"]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Booking",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/bookings/1/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }]
+          },
+          "response": [
+            {
+              "name": "204 No Content",
+              "status": "No Content",
+              "code": 204,
+              "body": "{\n  \"message\": \"Бронирование удалено.\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
